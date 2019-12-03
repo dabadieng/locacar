@@ -1,0 +1,5 @@
+git remote add origin https://github.com/hacene92230/locacar.git
+git push -u origin master
+… Ou poussez un référentiel existant à partir de la ligne de commande:
+git remote add origin https://github.com/hacene92230/locacar.git
+git push -u origin master

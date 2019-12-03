@@ -1,0 +1,211 @@
+La société LOCACAR spécialisée dans la location de voiture possède un réseau d’une vingtaine d’agences réparties sur le territoire français.
+<MCD>
+    <entité>
+
+            agence
+            - id
+            - nom
+            - adresse 
+
+            departement 
+            - id 
+            - nom 
+            - numero 
+                
+
+            location
+            - id 
+            - date_demande 
+            - date time debut 
+            - date time fin 
+
+	        options
+            - id 
+            - type 
+            - tarif 
+		
+
+            client
+            - id
+            - nom
+            - login 
+            - MP
+            - adresse CP Ville 
+
+            véhicule
+            - id
+            - immatriculation
+            - modele 
+        
+        
+            catégorie 
+            - id 
+            - type 
+
+            
+            operateur 
+            - id 
+            - nom 
+            - login 
+            - MP 
+            - profil 
+            
+
+            type_de_reservation 
+            - en ligne 
+            - en agence 
+            - par téléphone 
+
+            plage horaire
+            - id 
+            - durre min
+            - duree max 
+
+    </entité>
+
+	<associations>
+        posséde  -- administrativement 
+            vehicule  1,1
+            agence    1,N
+
+        localisation
+            agence          1,1
+            dapartement     1,N
+
+        appartient
+            véhicule 1,1
+            catégorie 1,N 
+
+        tarifer 
+            location 0,N
+            option 0,N
+        
+
+        localisation du véhicule -- site instant T 
+            véhicule 1,1
+            agence    0,N
+	
+        demande de location (statut)
+			véhicule 1,N
+			client 1,N
+			location 1,1
+        
+        depart 
+            - location 1,1
+            - agence 1,N 
+
+        arrivee 
+            - location 1,1
+            - agence 1,N
+        
+        
+        gestion ( date mise à jour)
+			- operateur 1,N
+			- location 1,1
+
+
+        correspondance (prix)
+            - plage horaire 0,N 
+            - catégorie 0,N
+
+        type 
+            -type_de_reservation 1,N
+            -location 1,1
+
+
+
+	</associations>
+</MCD>
+
+
+<MLD>
+    <tables>
+
+        agence 
+            age_id int primary key,
+            age_nom varchar
+            age_departement int (fk)
+
+
+        departement 
+            dep_id int primary key,
+            dep_nom 
+            dep_code int 
+
+
+        location 
+            loc_id int primary key,
+            loc_date_demande date 
+            loc_date_heure_debut datetime 
+            loc_date_heure_fin datetime 
+            loc_statut varchar
+            loc_agence_depart int (FK)
+            loc_agence_arrivee int (FK)
+            loc_client int (FK)
+            loc_gestionnaire int (FK)
+            loc_date_mise_a_jour datetime 
+            loc_type_de_reservation int (fk)
+
+
+        options
+            opt_id int primary key,
+            opt_type varchar
+            opt_tarif varchar
+
+        client 
+            cli_id int primary key,
+            cli_nom varchar
+            cli_login varchar
+            cli_mp varchar
+            cli_adresse varchar
+            cli_cp varchar
+            cli_ville varchar
+
+        vehicule 
+            veh_id int primary key,
+            veh_immatriculation varchar
+            veh_marque varchar
+            veh_appartient_agence int (FK)
+            veh_categorie int (FK)
+            veh_localiser_agence int (FK)
+
+        categorie
+            cat_id int primary key,
+            cat_nom varchar
+
+        operateur
+            ope_id int primary key,
+            ope_nom varchar
+            ope_login varchar
+            ope_mp varchar
+            ope_profil varchar
+
+
+        type_de_reservation 
+            tdr_id int primary key,
+            tdr_tel varchar
+            tdr_ligne varchar
+            tdr_agence varchar
+
+        plage_horaire 
+            pla_id int primary key,
+            pla_duree_min int 
+            pla_duree_max int 
+
+        correspondance 
+            cor_id int primary key,
+            cor_prix int 
+            cor_plage_horaire int (FK)
+            cor_categorie int (FK)
+
+
+        tarifer 
+            tar_id int primary key,
+            tar_location int (FK)
+            tar_option int (FK)
+                    
+    </tables>
+
+
+
+</MLD>
