@@ -38,10 +38,8 @@
 
     -- vue donnant le nombre d'heures pour une location donnée 
     create or replace view loc_duree as
-    select loc_id, veh_id,loc_date_heure_debut, loc_date_heure_fin,  sum(datediff(loc_date_heure_fin,loc_date_heure_debut))*24 duree 
-    from location, vehicule, definir, plage_horaire
-    where loc_vehicule=veh_id and veh_categorie=def_categorie and def_plage_horaire=pla_id
-    group by loc_id; 
+    select loc_id,loc_date_heure_debut,loc_date_heure_fin, timestampdiff(hour, loc_date_heure_debut, loc_date_heure_fin) duree 
+    from location;
 
     -- vue donnant le prix de la location hors options :
     create or replace view loc_prix as 
@@ -51,19 +49,19 @@
     and pla_id=def_plage_horaire 
     and duree between pla_duree_min and pla_duree_max;
 
-    --vue donnant le prix des options par véhicule 
+    --vue donnant le prix des options par location 
     create or replace view loc_option as
-    select  equ_location, veh_immatriculation, veh_marque, sum(opt_tarif) prixopt 
-    from options, equipement, location, vehicule 
-    where equ_options=opt_id and equ_location=loc_id and veh_id=loc_vehicule
-    group by veh_id;
+    select  equ_location, sum(opt_tarif) prixopt 
+    from options, equipement, location 
+    where equ_options=opt_id and equ_location=loc_id
+    group by loc_id;
 
     -- requête 
-    select age_id, age_nom, count(loc_id) nb, sum(prixHorsOptions + prixopt) total
-    from loc_option, loc_prix, agence, location 
-    where equ_location=loc_id 
-    and age_id=loc_agence_depart 
-    and age_id=1; 
+    select loc_id, age_id, age_nom, sum(prixHorsOptions + prixopt) total
+    from loc_option, loc_prix, agence
+    where equ_location=loc_id
+    and age_id = 1; 
+
 
 
 -- 8 Requête donnant la durée (en nombre d’heures) d’une location.
